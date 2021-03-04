@@ -1,0 +1,12 @@
+mode: ContinuousDeployment
+branches:
+  master:
+    tag: ''
+  develop:
+    tag: beta
+  feature:
+    tag: alpha.{BranchName}
+  release:
+    tag: rc
+ignore:
+  sha: []

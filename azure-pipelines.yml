@@ -1,0 +1,71 @@
+trigger:
+  branches:
+    include:
+      - master
+      - develop
+      - feature/*
+      - release/*
+
+resources:
+  repositories:
+    - repository: PipelineTemplates
+      name: DevOps/Pipeline-Templates
+      type: git
+
+jobs:
+  - job: Build
+    displayName: 'Build'
+    strategy:
+      matrix:
+        Release:
+          BuildPlatform: 'Any CPU'
+          BuildConfiguration: 'Release'
+        Debug:
+          BuildPlatform: 'Any CPU'
+          BuildConfiguration: 'Debug'
+    pool:
+      name: Cloud-Build
+
+    steps:
+      - template: ApplyVersion/applyVersion.v1.yml@PipelineTemplates
+        parameters:
+          versionFile: '\version.props'
+
+      - task: NuGetToolInstaller@1
+        displayName: 'Use NuGet 5.6.0'
+        inputs:
+          versionSpec: 5.6.0
+
+      - task: NuGetCommand@2
+        displayName: 'NuGet restore'
+        inputs:
+          restoreSolution: Navis.SDK.Bluetracker.Reporting.sln
+          feedsToUse: config
+          nugetConfigPath: NuGet.config
+
+      - task: VSBuild@1
+        displayName: 'Build solution Navis.SDK.Bluetracker.Reporting.sln'
+        inputs:
+          solution: Navis.SDK.Bluetracker.Reporting.sln
+          platform: '$(BuildPlatform)'
+          configuration: '$(BuildConfiguration)'
+
+      - task: PublishSymbols@2
+        displayName: 'Publish symbols path'
+        inputs:
+          SymbolServerType: TeamServices
+
+      - task: MSBuild@1
+        displayName: 'Create Nuget Packages'
+        inputs:
+          solution: Navis.SDK.Bluetracker.Reporting.sln
+          platform: '$(BuildPlatform)'
+          configuration: '$(BuildConfiguration)'
+          msbuildArguments: '/t:pack /p:PackageOutputPath="$(build.artifactstagingdirectory)\packages\$(BuildConfiguration)" /p:NoPackageAnalysis=true'
+
+      - task: PublishBuildArtifacts@1
+        displayName: 'Publish Artifact'
+        inputs:
+          PathtoPublish: '$(build.artifactstagingdirectory)'
+          ArtifactName: 'drop'
+        condition: succeededOrFailed()
