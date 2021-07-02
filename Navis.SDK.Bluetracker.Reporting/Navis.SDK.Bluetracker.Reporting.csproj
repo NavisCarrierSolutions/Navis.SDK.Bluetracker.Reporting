@@ -1,17 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+  <Import Project="../version.props" />
+
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Company>Kalmar Germany GmbH</Company>
     <Description>Wrapper for BlueTracker Reporting public API</Description>
-    <Copyright>Copyright © 2019</Copyright>
-    <!--<PackageLicenseUrl>https://raw.githubusercontent.com/NavisCarrierSolutions/BlueTracker.SDK.Performance/master/LICENSE</PackageLicenseUrl>
-    <PackageProjectUrl>https://github.com/NavisCarrierSolutions/BlueTracker.SDK.Performance</PackageProjectUrl>-->
+    <Copyright>Copyright © 2021</Copyright>
     <Authors>Kalmar Germany GmbH</Authors>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.0</Version>
-    <AssemblyVersion>1.0.0.0</AssemblyVersion>
-    <FileVersion>1.0.0.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
