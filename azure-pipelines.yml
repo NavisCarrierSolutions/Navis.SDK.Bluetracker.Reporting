@@ -1,33 +1,41 @@
+# https://github.com/NavisCarrierSolutions/Navis.SDK.Bluetracker.Reporting
+
+---
+
 trigger:
   branches:
     include:
-      - master
-      - develop
-      - feature/*
-      - release/*
+      - 'develop'
+      - 'feature/*'
+      - 'master'
+      - 'release/*'
 
 resources:
   repositories:
-    - repository: PipelineTemplates
-      name: DevOps/Pipeline-Templates
-      type: git
+    - repository: 'GitHub'
+      endpoint: 'GitHub'
+      name: 'NavisCarrierSolutions/Navis.SDK.Bluetracker.Reporting'
+      type: 'github'
+    - repository: 'PipelineTemplates'
+      name: 'DevOps/Pipeline-Templates'
+      type: 'git'
 
 jobs:
-  - job: Build
+  - job: 'Build'
     displayName: 'Build'
     strategy:
       matrix:
-        Release:
-          BuildPlatform: 'Any CPU'
-          BuildConfiguration: 'Release'
         Debug:
-          BuildPlatform: 'Any CPU'
           BuildConfiguration: 'Debug'
+          BuildPlatform: 'Any CPU'
+        Release:
+          BuildConfiguration: 'Release'
+          BuildPlatform: 'Any CPU'
     pool:
-      name: Cloud-Build
+      name: 'Cloud-Build'
 
     steps:
-      - template: ApplyVersion/applyVersion.v1.yml@PipelineTemplates
+      - template: 'ApplyVersion/applyVersion.v1.yml@PipelineTemplates'
         parameters:
           versionFile: '\version.props'
 
@@ -39,33 +47,34 @@ jobs:
       - task: NuGetCommand@2
         displayName: 'NuGet restore'
         inputs:
-          restoreSolution: Navis.SDK.Bluetracker.Reporting.sln
-          feedsToUse: config
-          nugetConfigPath: NuGet.config
+          feedsToUse: 'config'
+          nugetConfigPath: 'NuGet.config'
+          restoreSolution: 'Navis.SDK.Bluetracker.Reporting.sln'
 
       - task: VSBuild@1
         displayName: 'Build solution Navis.SDK.Bluetracker.Reporting.sln'
         inputs:
-          solution: Navis.SDK.Bluetracker.Reporting.sln
+          solution: 'Navis.SDK.Bluetracker.Reporting.sln'
           platform: '$(BuildPlatform)'
           configuration: '$(BuildConfiguration)'
 
       - task: PublishSymbols@2
         displayName: 'Publish symbols path'
         inputs:
-          SymbolServerType: TeamServices
+          SymbolServerType: 'TeamServices'
 
       - task: MSBuild@1
         displayName: 'Create Nuget Packages'
         inputs:
-          solution: Navis.SDK.Bluetracker.Reporting.sln
-          platform: '$(BuildPlatform)'
           configuration: '$(BuildConfiguration)'
           msbuildArguments: '/t:pack /p:PackageOutputPath="$(build.artifactstagingdirectory)\packages\$(BuildConfiguration)" /p:NoPackageAnalysis=true'
+          platform: '$(BuildPlatform)'
+          solution: 'Navis.SDK.Bluetracker.Reporting.sln'
 
       - task: PublishBuildArtifacts@1
+        condition: 'succeededOrFailed()'
         displayName: 'Publish Artifact'
         inputs:
-          PathtoPublish: '$(build.artifactstagingdirectory)'
           ArtifactName: 'drop'
-        condition: succeededOrFailed()
+          PathtoPublish: '$(build.artifactstagingdirectory)'
+...
