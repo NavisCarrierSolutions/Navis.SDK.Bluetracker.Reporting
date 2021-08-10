@@ -13,7 +13,7 @@ trigger:
 resources:
   repositories:
     - repository: 'GitHub'
-      endpoint: 'GitHub connection'
+      endpoint: 'GitHub'
       name: 'NavisCarrierSolutions/Navis.SDK.Bluetracker.Reporting'
       type: 'github'
     - repository: 'PipelineTemplates'
