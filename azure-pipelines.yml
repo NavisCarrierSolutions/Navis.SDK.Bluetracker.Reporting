@@ -5,9 +5,9 @@
 trigger:
   branches:
     include:
-      - 'master'
       - 'develop'
       - 'feature/*'
+      - 'master'
       - 'release/*'
 
 resources:
