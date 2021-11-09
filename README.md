@@ -1,20 +1,28 @@
-# Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
+# Navis.SDK.Bluetracker.Reporting 
+This project is a C# wrapper of the Bluetracker-Reporting REST API. It is used to easily query Bluetracker-Reporting entities in C#. 
 
 # Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
+`Install-Package Navis.SDK.Bluetracker.Reporting`
 
-# Build and Test
-TODO: Describe and show how to build your code and run the tests. 
+or place this directly in your .csproj
 
-# Contribute
-TODO: Explain how other users and developers can contribute to make your code better. 
+`<PackageReference Include="Navis.SDK.Bluetracker.Reporting" Version="2.0.0" />`
 
-If you want to learn more about creating good readme files then refer the following [guidelines](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-a-readme?view=azure-devops). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
+Create an **API key**. The key can be created via the **Company Manager** in the **Company Admin** application.
+
+```C#
+var apiKey = "myKey";
+var http = new HttpClient();
+
+var reportField = new ReportFieldClient(http, apiKey);
+var fields = await reportField.GetReportFields();
+
+var reportCLient = new ReportClient(http, apiKey);
+var reports = await reportCLient.GetReports(1234567, new DateTime(2021, 1, 1), new DateTime(2021, 12, 31),0, null, null);
+
+var shipClient = new ShipClient(http, apiKey);
+var ships = await shipClient.GetShips();
+
+var scheduleClient = new ScheduleClient(http, apiKey);
+var schedules = await scheduleClient.GetSchedules(1234567, new DateTime(2021, 1, 1),new DateTime(2021, 12, 31), 0, null, null);
+```
