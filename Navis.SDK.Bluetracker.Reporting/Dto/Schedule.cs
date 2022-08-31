@@ -1,7 +1,6 @@
-﻿using System;
-using Navis.SDK.Bluetracker.Reporting.Enums;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+﻿using Navis.SDK.Bluetracker.Reporting.Enums;
+using System;
+using System.Collections.Generic;
 
 namespace Navis.SDK.Bluetracker.Reporting.Dto
 {
@@ -19,6 +18,11 @@ namespace Navis.SDK.Bluetracker.Reporting.Dto
         /// Schedule Identifier
         /// </summary>
         public Guid ScheduleIdentifier { get; set; }
+
+        /// <summary>
+        /// Custom Id
+        /// </summary>
+        public string CustomId { get; set; }
 
         /// <summary>
         /// Ship
@@ -41,6 +45,11 @@ namespace Navis.SDK.Bluetracker.Reporting.Dto
         public Location Location { get; set; }
 
         /// <summary>
+        /// Terminal code
+        /// </summary>
+        public string TerminalCode { get; set; }
+
+        /// <summary>
         /// ETA - Estimated time of arrival
         /// </summary>
 
@@ -58,10 +67,9 @@ namespace Navis.SDK.Bluetracker.Reporting.Dto
         public DateTimeOffset? ETD { get; set; }
 
         /// <summary>
-        /// Portactivities
+        /// Port activities
         /// </summary>
-        [JsonConverter(typeof(StringEnumConverter))]
-        public PortActivity PortActivities { get; set; }
+        public List<PortActivity> PortActivities { get; set; }
 
         /// <summary>
         /// Wheater portcall is omitted
@@ -92,5 +100,20 @@ namespace Navis.SDK.Bluetracker.Reporting.Dto
         /// Version of ship.CurrentVersionStamp
         /// </summary>
         public long VersionStamp { get; set; }
+
+        /// <summary>
+        /// Indicates
+        /// </summary>
+        public bool Synchronized { get; set; }
+
+        /// <summary>
+        /// Indicates who created the schedule
+        /// </summary>
+        public CreatedBy CreatedBy { get; set; }
+
+        /// <summary>
+        /// Shows when the item was created
+        /// </summary>
+        public DateTime CreatedOn { get; set; }
     }
 }
